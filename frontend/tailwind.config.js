@@ -1,0 +1,70 @@
+/** @type {import('tailwindcss').Config} */
+export default {
+    content: ['./index.html', './src/**/*.{js,jsx}'],
+    theme: {
+        extend: {
+            colors: {
+                paper: {
+                    50:  '#fdfcfa',
+                    100: '#faf9f7',
+                    200: '#f5f2ec',
+                    300: '#ede8dd',
+                    400: '#e0d9c8',
+                    500: '#c9c0aa',
+                },
+                ink: {
+                    900: '#1a1815',
+                    800: '#2a2621',
+                    700: '#3d3831',
+                    600: '#5a5450',
+                    500: '#7a7370',
+                    400: '#9a938e',
+                    300: '#b5aea7',
+                    200: '#d1cbc2',
+                    100: '#e5e0d8',
+                },
+                clay: {
+                    50:  '#fbf1ec',
+                    100: '#f4dfd4',
+                    200: '#e7bea9',
+                    300: '#d99479',
+                    400: '#cb7452',
+                    500: '#c96442',
+                    600: '#b3573a',
+                    700: '#95462f',
+                    800: '#733626',
+                    900: '#4d251a',
+                },
+                sage:   { DEFAULT: '#4b7a53', muted: '#e6efe5' },
+                ochre:  { DEFAULT: '#b8853d', muted: '#f4ead1' },
+                brick:  { DEFAULT: '#b8483c', muted: '#f6dfd8' },
+                slate2: { DEFAULT: '#4a6fa5', muted: '#e2ebf7' },
+            },
+            fontFamily: {
+                serif: ['"Fraunces"', 'ui-serif', 'Georgia', 'serif'],
+                sans:  ['"Instrument Sans"', 'system-ui', '-apple-system', 'sans-serif'],
+                mono:  ['"JetBrains Mono"', '"Fira Code"', 'Consolas', 'monospace'],
+            },
+            boxShadow: {
+                paper:  '0 1px 2px rgba(60,50,40,0.04), 0 1px 3px rgba(60,50,40,0.06)',
+                soft:   '0 2px 12px rgba(60,50,40,0.06), 0 1px 3px rgba(60,50,40,0.04)',
+                lift:   '0 8px 24px rgba(60,50,40,0.08), 0 2px 6px rgba(60,50,40,0.05)',
+                inset1: 'inset 0 0 0 1px #e5e0d8',
+                ring:   '0 0 0 3px rgba(201,100,66,0.15)',
+            },
+            animation: {
+                'fade-in':  'fadeIn 0.5s ease-out',
+                'rise':     'rise 0.5s cubic-bezier(0.22,1,0.36,1)',
+                'blink':    'blink 1.1s steps(2,end) infinite',
+                'shimmer':  'shimmer 1.6s linear infinite',
+            },
+            keyframes: {
+                fadeIn: { from: { opacity: 0 }, to: { opacity: 1 } },
+                rise:   { from: { opacity: 0, transform: 'translateY(8px)' }, to: { opacity: 1, transform: 'translateY(0)' } },
+                blink:  { '0%,100%': { opacity: 1 }, '50%': { opacity: 0 } },
+                shimmer:{ '0%': { backgroundPosition: '-200% 0' }, '100%': { backgroundPosition: '200% 0' } },
+            },
+        },
+    },
+    plugins: [],
+};

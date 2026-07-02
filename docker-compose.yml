@@ -1,0 +1,77 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: emendator_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-codereviewer}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-securepassword123}
+      POSTGRES_DB: ${POSTGRES_DB:-codereviewer}
+    ports:
+      - "5432:5432"
+    volumes:
+      - emendator_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-codereviewer}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - emendator_network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: emendator_backend
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-codereviewer}:${POSTGRES_PASSWORD:-securepassword123}@postgres:5432/${POSTGRES_DB:-codereviewer}
+      JWT_SECRET: ${JWT_SECRET:-change-this-jwt-secret-in-production}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:-change-this-refresh-secret-in-production}
+      OPENROUTER_API_KEY_GEMMA: ${OPENROUTER_API_KEY_GEMMA:-}
+      OPENROUTER_API_KEY_NEMOTRON: ${OPENROUTER_API_KEY_NEMOTRON:-}
+      OPENROUTER_API_KEY_GPTOSS: ${OPENROUTER_API_KEY_GPTOSS:-}
+      OPENROUTER_MODEL_TIMEOUT_MS: ${OPENROUTER_MODEL_TIMEOUT_MS:-60000}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-631600119621-kctn3pv9i0tlevcj0vrrfhm7bfkdlo4p.apps.googleusercontent.com}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-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}
+      GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID:-Ov23likq8Qcsx8P7oMja}
+      GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET:-95ec68111c25061bcaaffb684dd37f6803001e3b}
+      PORT: 5000
+      NODE_ENV: ${NODE_ENV:-production}
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:5173}
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./backend/logs:/app/logs
+    networks:
+      - emendator_network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: emendator_frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    environment:
+      VITE_API_URL: ${VITE_API_URL:-http://localhost:5000}
+    ports:
+      - "5173:80"
+    networks:
+      - emendator_network
+
+volumes:
+  emendator_data:
+    driver: local
+
+networks:
+  emendator_network:
+    driver: bridge
+

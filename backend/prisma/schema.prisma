@@ -1,0 +1,44 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id         String   @id @default(uuid())
+  email      String   @unique
+  name       String
+  password   String?
+  avatar     String?
+  provider   String?
+  providerId String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  reviews    Review[]
+
+  @@unique([provider, providerId])
+}
+
+model Review {
+  id           String   @id @default(uuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  code         String
+  language     String
+  score        Int
+  // Legacy fields (kept for backward compatibility with existing history)
+  issues       Json
+  suggestions  Json
+  lineFixes    Json
+  // New fields added by OpenRouter multi-model pipeline
+  improvedCode String?  @db.Text
+  metadata     Json?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([userId])
+  @@index([userId, createdAt(sort: Desc)])
+}

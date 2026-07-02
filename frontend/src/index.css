@@ -1,0 +1,187 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+        background-color: #faf9f7;
+        color: #1a1815;
+        font-family: 'Instrument Sans', system-ui, -apple-system, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        font-feature-settings: 'ss01', 'ss02', 'cv01';
+    }
+    h1, h2, h3, h4, .font-serif {
+        font-family: 'Fraunces', ui-serif, Georgia, serif;
+        font-optical-sizing: auto;
+        font-variation-settings: 'SOFT' 30, 'WONK' 0;
+        letter-spacing: -0.015em;
+    }
+    kbd {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.75rem;
+        padding: 1px 6px;
+        background: #f5f2ec;
+        border: 1px solid #e5e0d8;
+        border-bottom-width: 2px;
+        border-radius: 4px;
+        color: #3d3831;
+    }
+    ::-webkit-scrollbar { width: 10px; height: 10px; }
+    ::-webkit-scrollbar-track { background: #faf9f7; }
+    ::-webkit-scrollbar-thumb { background: #d1cbc2; border-radius: 10px; border: 2px solid #faf9f7; }
+    ::-webkit-scrollbar-thumb:hover { background: #b5aea7; }
+    ::selection { background: rgba(201,100,66,0.20); color: #1a1815; }
+}
+
+@layer components {
+    /* ── Surfaces ─────────────────────────────────────────── */
+    .surface {
+        background: #ffffff;
+        border: 1px solid #e5e0d8;
+        border-radius: 10px;
+    }
+    .surface-soft {
+        background: #f5f2ec;
+        border: 1px solid #ede8dd;
+        border-radius: 10px;
+    }
+    .surface-hover {
+        transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease;
+    }
+    .surface-hover:hover {
+        border-color: #d1cbc2;
+        box-shadow: 0 2px 12px rgba(60,50,40,0.06), 0 1px 3px rgba(60,50,40,0.04);
+    }
+
+    /* ── Buttons ──────────────────────────────────────────── */
+    .btn {
+        display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+        padding: 8px 16px; border-radius: 8px;
+        font-family: 'Instrument Sans', sans-serif;
+        font-size: 14px; font-weight: 500; line-height: 1;
+        transition: all .18s ease;
+        cursor: pointer;
+        border: 1px solid transparent;
+    }
+    .btn-primary {
+        background: #1a1815; color: #faf9f7;
+        border-color: #1a1815;
+    }
+    .btn-primary:hover { background: #2a2621; border-color: #2a2621; }
+    .btn-primary:disabled { opacity: .5; cursor: not-allowed; }
+
+    .btn-clay {
+        background: #c96442; color: #ffffff;
+        border-color: #c96442;
+    }
+    .btn-clay:hover { background: #b3573a; border-color: #b3573a; }
+    .btn-clay:disabled { opacity: .5; cursor: not-allowed; }
+
+    .btn-ghost {
+        background: transparent; color: #3d3831;
+        border-color: #e5e0d8;
+    }
+    .btn-ghost:hover { background: #f5f2ec; border-color: #d1cbc2; }
+    .btn-ghost:disabled { opacity: .5; cursor: not-allowed; }
+
+    .btn-plain {
+        background: transparent; color: #5a5450; padding: 6px 10px;
+    }
+    .btn-plain:hover { background: #f5f2ec; color: #1a1815; }
+
+    /* ── Inputs ───────────────────────────────────────────── */
+    .input {
+        width: 100%;
+        padding: 10px 14px;
+        background: #ffffff;
+        color: #1a1815;
+        border: 1px solid #e5e0d8;
+        border-radius: 8px;
+        font-size: 14px;
+        outline: none;
+        transition: border-color .15s ease, box-shadow .15s ease;
+        font-family: 'Instrument Sans', sans-serif;
+    }
+    .input::placeholder { color: #9a938e; }
+    .input:focus {
+        border-color: #c96442;
+        box-shadow: 0 0 0 3px rgba(201,100,66,0.12);
+    }
+    .input-error { border-color: #b8483c; }
+
+    /* ── Chip / Badge ─────────────────────────────────────── */
+    .chip {
+        display: inline-flex; align-items: center; gap: 4px;
+        padding: 2px 8px;
+        border-radius: 999px;
+        font-size: 11px; font-weight: 500;
+        border: 1px solid transparent;
+        letter-spacing: 0.01em;
+    }
+
+    /* ── Terminal-ish prompt block (subtle nod, not full CLI) ─ */
+    .prompt-line {
+        font-family: 'JetBrains Mono', monospace;
+        color: #5a5450;
+        font-size: 13px;
+    }
+    .prompt-line::before {
+        content: '›';
+        color: #c96442;
+        margin-right: 8px;
+        font-weight: 600;
+    }
+
+    .cursor::after {
+        content: '';
+        display: inline-block;
+        width: 8px; height: 1em;
+        background: #c96442;
+        margin-left: 3px;
+        vertical-align: text-bottom;
+        animation: blink 1.1s steps(2,end) infinite;
+    }
+
+    /* ── Shimmer for skeletons ────────────────────────────── */
+    .shimmer {
+        background: linear-gradient(90deg,
+            rgba(0,0,0,0.03) 25%,
+            rgba(0,0,0,0.06) 50%,
+            rgba(0,0,0,0.03) 75%);
+        background-size: 200% 100%;
+        animation: shimmer 1.6s infinite;
+    }
+
+    /* ── Paper texture (very subtle) ──────────────────────── */
+    .paper-grain {
+        position: relative;
+    }
+    .paper-grain::before {
+        content: '';
+        position: absolute; inset: 0;
+        pointer-events: none;
+        background-image:
+            radial-gradient(circle at 25% 30%, rgba(0,0,0,0.012) 1px, transparent 1px),
+            radial-gradient(circle at 75% 70%, rgba(0,0,0,0.010) 1px, transparent 1px);
+        background-size: 3px 3px, 5px 5px;
+        opacity: .8;
+    }
+}
+
+@layer utilities {
+    .text-clay { color: #c96442; }
+    .divider-dot {
+        display: inline-block; width: 3px; height: 3px;
+        background: #b5aea7; border-radius: 999px;
+        vertical-align: middle; margin: 0 8px;
+    }
+    /* Monaco light adjustment when embedded on cream */
+    .monaco-cream .monaco-editor,
+    .monaco-cream .monaco-editor-background,
+    .monaco-cream .monaco-editor .margin {
+        background-color: #ffffff !important;
+    }
+}
