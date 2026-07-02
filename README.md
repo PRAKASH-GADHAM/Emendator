@@ -1,12 +1,12 @@
 <div align="center">
 
-#███████╗███╗   ███╗███████╗███╗   ██╗██████╗  █████╗ ████████╗ ██████╗ ██████╗
- ██╔════╝████╗ ████║██╔════╝████╗  ██║██╔══██╗██╔══██╗╚══██╔══╝██╔═══██╗██╔══██╗
- █████╗  ██╔████╔██║█████╗  ██╔██╗ ██║██║  ██║███████║   ██║   ██║   ██║██████╔╝
- ██╔══╝  ██║╚██╔╝██║██╔══╝  ██║╚██╗██║██║  ██║██╔══██║   ██║   ██║   ██║██╔══██╗
- ███████╗██║ ╚═╝ ██║███████╗██║ ╚████║██████╔╝██║  ██║   ██║   ╚██████╔╝██║  ██║
- ╚══════╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═══╝╚═════╝ ╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═╝
+'''
+ ___ __  __ ___ _  _ ___   _ _____ ___  ___ 
+| __|  \/  | __| \| |   \ /_\_   _/ _ \| _ \
+| _|| |\/| | _|| .` | |) / _ \| || (_) |   /
+|___|_|  |_|___|_|\_|___/_/ \_\_| \___/|_|_\
 
+'''
 ### AI-Powered, Multi-Model Consensus Code Review Platform
 
 Emendator sends your code to three independent LLMs in parallel, merges their findings into a single high-confidence review, and gives you back a scored, annotated, and improved version of your code — through a clean, editor-grade web interface.
