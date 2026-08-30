@@ -18,6 +18,8 @@ model User {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   reviews    Review[]
+  leetcodeSubmissions LeetCodeSubmission[]
+  leetcodeReviews LeetCodeReview[]
 
   @@unique([provider, providerId])
 }
@@ -40,5 +42,73 @@ model Review {
   updatedAt    DateTime @updatedAt
 
   @@index([userId])
+  @@index([userId, createdAt(sort: Desc)])
+}
+
+model LeetCodeProblem {
+  id          String   @id @default(uuid())
+  number      Int      @unique
+  slug        String   @unique
+  title       String
+  difficulty  String   // Easy, Medium, Hard
+  description String   @db.Text
+  constraints Json     // Array of constraint strings
+  examples    Json     // Array of {input, output, explanation}
+  topics      Json     // Array of topic strings
+  starterCode Json     // Map of language -> starter code string
+  validationStrategy String @default("exact") // exact | unordered-array
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  testCases LeetCodeTestCase[]
+  submissions LeetCodeSubmission[]
+
+  @@index([difficulty])
+  @@index([number])
+}
+
+model LeetCodeTestCase {
+  id             String  @id @default(uuid())
+  problemId      String
+  problem        LeetCodeProblem @relation(fields: [problemId], references: [id], onDelete: Cascade)
+  input          String  @db.Text
+  expectedOutput String  @db.Text
+  isSample       Boolean @default(false)
+  explanation    String?
+
+  @@index([problemId])
+}
+
+model LeetCodeSubmission {
+  id         String   @id @default(uuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  problemId  String
+  problem    LeetCodeProblem @relation(fields: [problemId], references: [id], onDelete: Cascade)
+  code       String   @db.Text
+  language   String
+  status     String   // PASSED, FAILED, COMPILE_ERROR, etc.
+  runtime    Int?     // milliseconds
+  memory     Int?     // kilobytes
+  testResults Json?
+  createdAt  DateTime @default(now())
+
+  @@index([userId, problemId])
+  @@index([userId, createdAt(sort: Desc)])
+}
+
+model LeetCodeReview {
+  id           String   @id @default(uuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  code         String   @db.Text
+  problemTitle String
+  problemDesc  String   @db.Text
+  language     String
+  testResults  Json?
+  score        Int
+  metadata     Json?
+  createdAt    DateTime @default(now())
+
   @@index([userId, createdAt(sort: Desc)])
 }
