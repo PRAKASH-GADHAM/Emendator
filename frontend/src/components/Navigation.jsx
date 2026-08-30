@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
-import { LayoutGrid, PenLine, Clock, LogOut, Menu, X } from 'lucide-react';
+import { LayoutGrid, PenLine, Clock, Code2, LogOut, Menu, X } from 'lucide-react';
 
 // Small serif-mark logo — no gradient, no zap icon
 function Mark({ size = 28 }) {
@@ -32,6 +32,7 @@ export default function Navigation() {
     const navLinks = [
         { to: '/dashboard', label: 'Overview',    icon: LayoutGrid,  testid: 'nav-dashboard' },
         { to: '/review',    label: 'New review',  icon: PenLine,     testid: 'nav-review'    },
+        { to: '/leetcode',  label: 'LeetCode',    icon: Code2,       testid: 'nav-leetcode'  },
         { to: '/history',   label: 'History',     icon: Clock,       testid: 'nav-history'   },
     ];
 
