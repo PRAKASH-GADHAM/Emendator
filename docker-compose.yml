@@ -29,28 +29,70 @@ services:
       postgres:
         condition: service_healthy
     environment:
-      DATABASE_URL: postgresql://${POSTGRES_USER:-codereviewer}:${POSTGRES_PASSWORD:-securepassword123}@postgres:5432/${POSTGRES_DB:-codereviewer}
-      JWT_SECRET: ${JWT_SECRET:-change-this-jwt-secret-in-production}
-      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:-change-this-refresh-secret-in-production}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-codereviewer}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-codereviewer}
+      JWT_SECRET: ${JWT_SECRET:-}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:-}
       OPENROUTER_API_KEY_GEMMA: ${OPENROUTER_API_KEY_GEMMA:-}
       OPENROUTER_API_KEY_NEMOTRON: ${OPENROUTER_API_KEY_NEMOTRON:-}
       OPENROUTER_API_KEY_GPTOSS: ${OPENROUTER_API_KEY_GPTOSS:-}
       OPENROUTER_MODEL_TIMEOUT_MS: ${OPENROUTER_MODEL_TIMEOUT_MS:-60000}
-      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-631600119621-kctn3pv9i0tlevcj0vrrfhm7bfkdlo4p.apps.googleusercontent.com}
-      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-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}
-      GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID:-Ov23likq8Qcsx8P7oMja}
-      GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET:-95ec68111c25061bcaaffb684dd37f6803001e3b}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
+      GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID:-}
+      GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET:-}
       PORT: 5000
       NODE_ENV: ${NODE_ENV:-production}
       FRONTEND_URL: ${FRONTEND_URL:-http://localhost:5173}
     ports:
       - "5000:5000"
+    healthcheck:
+      test: [ "CMD", "node", "-e", "fetch('http://localhost:5000/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))" ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
     volumes:
       - ./backend/logs:/app/logs
     networks:
       - emendator_network
     extra_hosts:
       - "host.docker.internal:host-gateway"
+
+  # Dedicated sandbox image for untrusted LeetCode submissions.
+  # The backend launches per-run instances of this image with a hardened
+  # isolation flag set (--network none, --cap-drop ALL, --security-opt
+  # no-new-privileges, --read-only + tmpfs /workspace, --user 65534:65534,
+  # --memory/--cpus/--pids-limit, --stop-timeout) so submitted code NEVER
+  # receives a Docker socket, database credentials, API keys, or host mounts.
+  executor:
+    build:
+      context: ./backend/executor
+      dockerfile: Dockerfile
+    image: emendator-executor:latest
+    container_name: emendator_executor
+    restart: unless-stopped
+    # The executor image is a worker (runtime bundle) launched per-run by the
+    # backend; as a standalone service it just idles so compose keeps it up.
+    command: [ "sh", "-c", "echo 'emendator-executor ready'; exec sleep infinity" ]
+    mem_limit: 256m
+    mem_reservation: 128m
+    cpus: 0.5
+    pids_limit: 64
+    user: "65534:65534"
+    read_only: true
+    tmpfs:
+      - /workspace:rw,noexec,nosuid,size=64m
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    network_mode: none
+    healthcheck:
+      # node resolves to /usr/local/bin/node in node:18-alpine, so resolve via PATH.
+      test: [ "CMD-SHELL", "command -v java && command -v node && command -v python3 && command -v g++" ]
+      interval: 60s
+      timeout: 5s
+      retries: 3
 
   frontend:
     build:
