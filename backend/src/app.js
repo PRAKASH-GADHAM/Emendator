@@ -10,6 +10,7 @@ const errorHandler = require('./middleware/errorHandler');
 const authRoutes = require('./routes/auth.routes');
 const reviewRoutes = require('./routes/review.routes');
 const historyRoutes = require('./routes/history.routes');
+const leetcodeRoutes = require('./modules/leetcode/leetcode.routes');
 
 const app = express();
 
@@ -55,6 +56,7 @@ app.get('/health', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/review', reviewRoutes);
 app.use('/api/history', historyRoutes);
+app.use('/api/leetcode', leetcodeRoutes);
 
 // 404 Handler
 app.use((req, res) => {
