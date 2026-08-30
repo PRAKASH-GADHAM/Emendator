@@ -15,6 +15,8 @@ const ReviewPage = lazy(() => import('./pages/ReviewPage'));
 const HistoryPage = lazy(() => import('./pages/HistoryPage'));
 const OAuthCallbackPage = lazy(() => import('./pages/OAuthCallbackPage'));
 const EditReviewPage = lazy(() => import('./pages/EditReviewPage'));
+const LeetCodeBrowserPage = lazy(() => import('./features/leetcode/pages/LeetCodeBrowserPage'));
+const LeetCodeProblemPage = lazy(() => import('./features/leetcode/pages/LeetCodeProblemPage'));
 
 function PageLoader() {
     return (
@@ -100,6 +102,10 @@ export default function App() {
 
                             {/* History */}
                             <Route path="/history" element={<HistoryPage />} />
+
+                            {/* LeetCode */}
+                            <Route path="/leetcode" element={<LeetCodeBrowserPage />} />
+                            <Route path="/leetcode/:problemId" element={<LeetCodeProblemPage />} />
                         </Route>
                     </Route>
 
