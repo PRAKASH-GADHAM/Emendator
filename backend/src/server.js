@@ -18,7 +18,7 @@ async function startServer() {
         const result = await prisma.$queryRaw`
             SELECT table_name 
             FROM information_schema.tables 
-            WHERE table_schema='public' AND table_name IN ('User', 'Review');
+            WHERE table_schema='public' AND table_name IN ('User', 'Review', 'LeetCodeProblem', 'LeetCodeTestCase', 'LeetCodeSubmission', 'LeetCodeReview');
         `;
         
         const tableNames = result.map(t => t.table_name);
