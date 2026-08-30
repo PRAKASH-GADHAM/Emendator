@@ -7,4 +7,5 @@ logs
 dist
 .git
 .gitignore
+docker-compose.yml
 secrets

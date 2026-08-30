@@ -5,3 +5,4 @@ dist
 !.env.example
 .git
 .gitignore
+docker-compose.yml

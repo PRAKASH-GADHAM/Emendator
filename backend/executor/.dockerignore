@@ -6,3 +6,4 @@ logs
 .git
 .gitignore
 dist
+docker-compose.yml
