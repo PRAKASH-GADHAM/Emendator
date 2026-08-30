@@ -78,6 +78,8 @@ Thumbs.db
 *.key
 *.crt
 *.p12
+# Generated project dump — contains live credentials; never commit it.
+PROJECT_CODE.md
 
 ########################
 # Misc

@@ -147,7 +147,7 @@ emendator/
 │   │   ├── store/                # Zustand auth & review stores
 │   │   └── api/                  # Axios API clients
 │
-└── docker-compose.yml           # Postgres + backend + frontend orchestration
+└── docker-compose.yml           # LOCAL-ONLY, excluded from git (credential defaults); see Getting Started
 ```
 
 ---
@@ -170,6 +170,9 @@ cp .env.example .env   # then fill in your own secrets — see note below
 > ⚠️ **Security note:** Never commit real API keys, database passwords, JWT secrets, or OAuth client secrets to version control. Generate fresh, unique values for `JWT_SECRET`, `JWT_REFRESH_SECRET`, `POSTGRES_PASSWORD`, and your OpenRouter/Google/GitHub credentials, and keep your `.env` file out of git (it's already listed in `.gitignore`).
 
 ### 2. Run with Docker (recommended)
+
+> ⚠️ **`docker-compose.yml` is intentionally excluded from the repository** because it contains credential defaults (e.g. the Postgres password). Create it locally from a template your team shares — or run the services manually with a `.env` (see step 3) — before running the commands below. The required services are `postgres` (`:5432`), `backend` (`:5000`), `frontend` (`:5173`), and the sandbox `executor`.
+
 ```bash
 docker compose up --build
 ```
@@ -231,7 +234,7 @@ npm run dev             # http://localhost:5173
 
 - The AI pipeline gracefully degrades: if one or two model API keys are missing or a model call fails, the review still completes using whichever models succeeded.
 - Review results are cached in-memory to avoid redundant model calls for identical submissions.
-- `cre.py` in the repo root is a developer utility script used to flatten the project into a single Markdown file (like the one this README was generated from) — it is not part of the running application.
+- A root-level `cre.py` developer utility (used to flatten the project into a single Markdown file) was previously present but has been removed from the repository.
 
 ---
 
